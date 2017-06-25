@@ -52,12 +52,12 @@ createLagDiffFeatures = function(obj, target = character(0L), lag = 0L, differen
   seasonal.difference.lag = 0L, frequency = 1L,
   na.pad = FALSE, return.nonlag = FALSE, grouping = NULL, add_var = FALSE, date.col) {
 
-  assertInteger(lag, lower = 0L, upper = 1000L)
-  assertInteger(difference, lower = 0L, upper = 1000L)
-  assertInteger(difference.lag, lower = 0L, upper = 1000L)
-  assertInteger(seasonal.lag, lower = 0L, upper = 1000L)
-  assertInteger(seasonal.difference, lower = 0L, upper = 1000L, len = 1L)
-  assertInteger(seasonal.difference.lag, lower = 0L, upper = 1000L, len = 1L)
+  assertIntegerish(lag, lower = 0L, upper = 100000L)
+  assertIntegerish(difference, lower = 0L, upper = 100000L)
+  assertIntegerish(difference.lag, lower = 0L, upper = 100000L)
+  assertIntegerish(seasonal.lag, lower = 0L, upper = 100000L)
+  assertIntegerish(seasonal.difference, lower = 0L, upper = 100000L)
+  assertIntegerish(seasonal.difference.lag, lower = 0L, upper = 100000L)
   assertLogical(na.pad)
   assert(checkClass(obj, "data.frame"), checkClass(obj, "Task"))
   assertCharacter(target, any.missing = FALSE)
@@ -192,7 +192,7 @@ createLagDiffFeatures.data.frame = function(obj, target = character(0L), lag = 0
 
   max.shift = 1:(max(lag, seasonal.lag * frequency,
     max(difference, 1) * max(difference.lag, 1),
-    max(seasonal.difference * frequency) * max(seasonal.difference.lag * frequency)))
+    max(seasonal.difference * frequency), max( seasonal.difference.lag * frequency)))
 
 
   if (return.nonlag) {
