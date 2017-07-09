@@ -171,14 +171,6 @@ makeForecast = function(.data, .newdata, .proc.vals, .h, .td, .model, ...) {
     group.data = unique(.data[,.proc.vals$grouping, with = FALSE])
 
   for (i in seq_len(.h)) {
-    if (!is.null(.proc.vals$grouping)) {
-      .data = rbindlist(l = list(.data[,c(.proc.vals$cols, .proc.vals$target, .proc.vals$grouping), with = FALSE], group.data), fill = TRUE)
-      setkeyv(.data, .proc.vals$grouping)
-    } else if (!is.null(.proc.vals$cols)) {
-      .data = do.call(rbind, list(.data[, c(.proc.vals$cols, .proc.vals$target)], rep(NA, ncol(.data))))
-    } else {
-      .data = rbindlist(list(.data[, c(.proc.vals$target), with = FALSE], data.table(NA)), use.names = FALSE)
-    }
     # The dates here will be thrown away later
     if (!is.null(.proc.vals$grouping)) {
       times = .data[, .SD[,as.POSIXct("1992-01-14") + 1:.N], by = c(.proc.vals$grouping)][, c(V1), drop = TRUE]
@@ -218,6 +210,14 @@ makeForecast = function(.data, .newdata, .proc.vals, .h, .td, .model, ...) {
       forecasts[[i]] = pred$data
     } else if (pred$predict.type == "se") {
       forecasts[[i]] = pred$data
+    }
+    if (!is.null(.proc.vals$grouping)) {
+      .data = rbindlist(l = list(.data[,c(.proc.vals$cols, .proc.vals$target, .proc.vals$grouping), with = FALSE], group.data), fill = TRUE)
+      setkeyv(.data, .proc.vals$grouping)
+    } else if (!is.null(.proc.vals$cols)) {
+      .data = do.call(rbind, list(.data[, c(.proc.vals$cols, .proc.vals$target)], rep(NA, ncol(.data))))
+    } else {
+      .data = rbindlist(list(.data[, c(.proc.vals$target), with = FALSE], data.table(NA)), use.names = FALSE)
     }
     .data[is.na(get(.proc.vals$target)), c(.proc.vals$target) := getPredictionResponse(pred)]
   }
