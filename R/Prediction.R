@@ -206,11 +206,12 @@ makePrediction.ForecastRegrTaskDesc = function(task.desc, row.names, id, truth, 
   # This will only happen when there is a task with no subset
   #  aka, we predict future values and have to get their times
   if (length(truth) > size.y) {
-    row.dates = as.POSIXct(as.matrix(task.desc$dates))
+    row.dates = task.desc$dates
     diff.time = difftime(row.dates[2], row.dates[1], units = "auto")
     start = row.dates[length(row.dates)] + diff.time
     end = start + diff.time * size.y
     row.dates = seq.POSIXt(start, end, by = diff.time)
+    row.dates = row.dates[seq_len(size.y)]
     data$id = NULL
     data$truth = NULL
   } else {
@@ -236,7 +237,7 @@ makePrediction.ForecastRegrTaskDesc = function(task.desc, row.names, id, truth, 
 
   makeS3Obj(c("PredictionForecastRegr", "Prediction"),
     predict.type = predict.type,
-    data = setRowNames(as.data.frame(data, row.names = NULL), row.names),
+    data = setRowNames(as.data.frame(data, row.names = NULL), as.character(row.dates)),
     threshold = NA_real_,
     task.desc = task.desc,
     time = time,
