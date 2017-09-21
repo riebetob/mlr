@@ -57,3 +57,5 @@ Other generate_plot_data: \code{\link{generateCalibrationData}},
   \code{\link{generateThreshVsPerfData}},
   \code{\link{getFilterValues}}
 }
+\concept{filter}
+\concept{generate_plot_data}

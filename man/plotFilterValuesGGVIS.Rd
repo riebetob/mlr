@@ -48,3 +48,5 @@ Other filter: \code{\link{filterFeatures}},
   \code{\link{makeFilterWrapper}},
   \code{\link{plotFilterValues}}
 }
+\concept{filter}
+\concept{plot}
