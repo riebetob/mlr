@@ -165,6 +165,7 @@ forecast.WrappedModel = function(object, newdata = NULL, task, h = 10, ...) {
     y = p, time = time.predict, error = error)
 }
 
+
 makeForecast = function(.data, .newdata, .proc.vals, .h, .td, .model, ...) {
   forecasts = list()[1:I(.h)]
   if (!is.null(.proc.vals$grouping))
@@ -215,7 +216,7 @@ makeForecast = function(.data, .newdata, .proc.vals, .h, .td, .model, ...) {
       .data = rbindlist(l = list(.data[,c(.proc.vals$cols, .proc.vals$target, .proc.vals$grouping), with = FALSE], group.data), fill = TRUE)
       setkeyv(.data, .proc.vals$grouping)
     } else if (!is.null(.proc.vals$cols)) {
-      .data = do.call(rbind, list(.data[, c(.proc.vals$cols, .proc.vals$target)], rep(NA, ncol(.data))))
+      .data = suppressWarnings(do.call(rbind, list(.data,.data[1E+99,])))
     } else {
       .data = rbindlist(list(.data[, c(.proc.vals$target), with = FALSE], data.table(NA)), use.names = FALSE)
     }
